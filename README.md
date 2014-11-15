@@ -1,0 +1,4 @@
+fractal
+=======
+
+Mandelbrot fractal drawer
