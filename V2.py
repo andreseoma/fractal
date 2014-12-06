@@ -6,7 +6,7 @@ from numba import jit
 import multiprocessing as mp
 from PIL import Image, ImageTk
 import numpy
-#kasutab lisaks mooduleid numpy, numba ja Pillow, tuleb tõmmata internetist
+#kasutab lisaks mooduleid numpy, numba ja Pillow, mis tuleb tõmmata internetist
 
 @jit
 def iterate(x,y,n):
@@ -24,7 +24,7 @@ def image(minx,miny,d,px):
     for y in range(px):
         for x in range(px):
             col=iterate(minx+x*step,miny+d-y*step,1000)
-            img[y,x]=255-col//4
+            img[y,x]=255-col
     return img
 
 def hit3(event):
@@ -51,7 +51,8 @@ def drop3(event):
     reset()
 
 def hit1(event):
-    global start1, dx, dy
+    global start1, dx, dy, nodrag
+    nodrag=False
     #print(dx, dy)
     start1=(event.x, event.y)
 
@@ -60,7 +61,8 @@ def drag1(event):
     update(dx+start1[0]-event.x,dy+event.y-start1[1])
 
 def drop1(event):
-    global dx, dy
+    global dx, dy, nodrag
+    nodrag=True
     dx = dx+start1[0]-event.x
     dy = dy+event.y-start1[1]
     #print(dx,dy)
@@ -80,13 +82,14 @@ def worker(jobs,done):
         done.put([img,job[0],job[1],job[4],time()-tim])
 
 def reset():
-    global grid, dx, dy, curi, curj
+    global grid, dx, dy, curi, curj,nodrag
+    nodrag=True
     curi,curj=0,0
     dx, dy = 0, 0
     grid=[(i,j) for i in range(2) for j in range(2)]
     grid+=[(i,j) for j in range(-1,3) for i in (-1,2)]
     grid+=[(i,j) for i in (0,1) for j in (-1,2)]
-    print(grid)
+    #print(grid)
     work=map(jobforgrid,grid)
     while not jobs.empty():
         try: jobs.get_nowait()
@@ -131,15 +134,16 @@ def update(dx,dy):
     img.paste(im)
     
 def listener():
-    global minx, miny, d, dx, dy
+    global minx, miny, d, dx, dy, curi, curj
     try:
         job=done.get_nowait()
         griddata[job[3]]=Image.fromarray(job[0],mode='L')
         #print(griddata.keys())
-        #print(job[4])
+        print(job[4])
         #griddata[job[3]].show()
         #print(job[1],job[2],job[3])
-        update(dx,dy)
+        if (0 <= job[3][0]-curi <= 2 or 0 <= job[3][1]-curj <= 2) and nodrag:
+            update(dx,dy)
     except: pass
     root.after(20,listener)
 
