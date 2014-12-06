@@ -7,3 +7,6 @@ Joonistab Mandelbrot fraktali. Selle jaoks käib kõik punktid läbi komplekstas
 
 Nüüd väljas versioon 2.
 Nüüd saab fraktalit ringi tõsta, välja zuumida. Lisaks kasutab programm nelja protsessi, et pildijuppe saaks arvutada paralleelselt, kui protsessoril on neli tuuma. Kiirema arvutamise jaoks võtsin kasutusele just-in-time kompileerija, mis kompileerib pythoni koodi. See teeb fraktali arvutamise kuni mitukümmend korda kiiremaks. Seega nüüd on fraktali joonistamine kiirem ja fraktal suurem.
+
+V3
+Kasutab gmpy2, mille abil saab teha arvutusi kui tahes täpselt (kuni mitu tuhat komakohta kindlasti), võrreldes tavalise doublega, mis on alla 20 komakoha. Kuna kompileerija gmpy2-te ei tunne, siis kompileerimine ei anna kiirust juurde ja on hoopis ilma kiirem. Gmpy2 on ise ka aeglasem, kui tavaliste floatidega arvutamine, seega on kokkuvõttes see mitusada korda aeglasem ja erilist interaktiivsust ei ole nagu kompileeritud versioonis. Seda versiooni saab muuta tavaliseks kiireks, kui võtta jit eest # ära ja algsuurused defineerida tavaliste arvudena, mitte gmpy2 kaudu.
