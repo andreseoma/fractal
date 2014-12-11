@@ -13,7 +13,7 @@ import traceback
 #kasutab lisaks mooduleid gmpy2, numpy, numba ja Pillow, mis tuleb tõmmata internetist
 
 
-#@jit(nopython=True)    #arbitrary precision puhul välja kommenteerida
+@jit(nopython=True)    #arbitrary precision puhul välja kommenteerida
 def image(img,minx,miny,d_x,n):
     py,px = img.shape
     stepx=d_x/px
