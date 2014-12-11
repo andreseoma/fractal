@@ -148,7 +148,7 @@ def update(dx,dy):
     for m in range(rangei+2*extrai):
         for p in range(rangej+2*extraj):
             bigim.paste(griddata.get((i-extrai+m,j-extraj+p),zeroimg),(m*gridx,(rangej+2*extraj)*gridy-(1+p)*gridy))
-    im.paste(bigim,(-gridx*extrai-offsetx,-gridy*extraj+offsety-(gridy-griddif)))
+    im.paste(bigim,(-gridx*extrai-offsetx,-gridy*extraj+offsety-griddif))
     img.paste(im)
     
 def listener():
@@ -171,16 +171,16 @@ def listener():
     root.after(20,listener)
 
 gmpy2.get_context().precision=100 #komakohtade arv arbitrary precision puhul
-sizex=300
-sizey=300
+sizex=800
+sizey=400
 n=1300
-gridx=250 #ühe arvutatava ruudu pikkus pikslites
-gridy=250
+gridx=200 #ühe arvutatava ruudu pikkus pikslites
+gridy=200
 rangei=ceil(sizex/gridx)
 rangej=ceil(sizey/gridy)
 extrai=ceil(rangei/2)
 extraj=ceil(rangej/2)
-griddif=sizey%gridy
+griddif=-sizey%gridy
 
 if __name__=='__main__':
     #minx = mpfr('-2')
