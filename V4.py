@@ -13,7 +13,7 @@ import traceback
 #kasutab lisaks mooduleid gmpy2, numpy, numba ja Pillow, mis tuleb tõmmata internetist
 
 
-@jit(nopython=True)    #arbitrary precision puhul välja kommenteerida
+#@jit(nopython=True)    #arbitrary precision puhul välja kommenteerida
 def image(img,minx,miny,d_x,n):
     py,px = img.shape
     stepx=d_x/px
@@ -99,10 +99,10 @@ def reset():
     curi,curj=0,0
     dx, dy = 0, 0
     grid=[(i,j) for i in range(rangei) for j in range(rangej)]
-    grid+=[(i,j) for j in range(-ceil(rangej/2),rangej+ceil(rangej/2)) for i in range(-ceil(rangei/2),0)]
-    grid+=[(i,j) for j in range(-ceil(rangej/2),rangej+ceil(rangej/2)) for i in range(rangei,rangei+ceil(rangei/2))]
-    grid+=[(i,j) for i in range(0,rangei) for j in range(-ceil(rangej/2),0)]
-    grid+=[(i,j) for i in range(0,rangei) for j in range(rangej,rangej+ceil(rangej/2))]
+    grid+=[(i,j) for j in range(-extraj,rangej+extraj) for i in range(-extrai,0)]
+    grid+=[(i,j) for j in range(-extraj,rangej+extraj) for i in range(rangei,rangei+extrai)]
+    grid+=[(i,j) for i in range(0,rangei) for j in range(-extraj,0)]
+    grid+=[(i,j) for i in range(0,rangei) for j in range(rangej,rangej+extraj)]
     work=map(jobforgrid,grid)
     while not jobs.empty():
         try: jobs.get_nowait()
@@ -122,10 +122,10 @@ def addjobs(job,jobs):
         return [minx+i*d_x*gridx/sizex,miny+j*d_y*gridy/sizey,d_x*gridx/sizex,gridx,gridy,(i,j),n]
     curi,curj,minx, miny, d_x, d_y, readydata, g = job
     grid=[(i+curi,j+curj) for i in range(rangei) for j in range(rangej)]
-    grid+=[(i+curi,j+curj) for j in range(-ceil(rangej/2),rangej+ceil(rangej/2)) for i in range(-ceil(rangei/2),0)]
-    grid+=[(i+curi,j+curj) for j in range(-ceil(rangej/2),rangej+ceil(rangej/2)) for i in range(rangei,rangei+ceil(rangei/2))]
-    grid+=[(i+curi,j+curj) for i in range(0,rangei) for j in range(-ceil(rangej/2),0)]
-    grid+=[(i+curi,j+curj) for i in range(0,rangei) for j in range(rangej,rangej+ceil(rangej/2))]
+    grid+=[(i+curi,j+curj) for j in range(-extraj,rangej+extraj) for i in range(-extrai,0)]
+    grid+=[(i+curi,j+curj) for j in range(-extraj,rangej+extraj) for i in range(rangei,rangei+extrai)]
+    grid+=[(i+curi,j+curj) for i in range(0,rangei) for j in range(-extraj,0)]
+    grid+=[(i+curi,j+curj) for i in range(0,rangei) for j in range(rangej,rangej+extraj)]
     grid2=set()
     while 1:
         try:
@@ -145,10 +145,10 @@ def update(dx,dy):
         jobs.put([curi,curj,minx, miny, d_x, d_y, readydata,0])
     offsetx=dx%gridx
     offsety=dy%gridy
-    for m in range(rangei+2*ceil(rangei/2)):
-        for p in range(rangej+2*ceil(rangej/2)):
-            bigim.paste(griddata.get((i-ceil(rangei/2)+m,j-ceil(rangej/2)+p),zeroimg),(m*gridx,(rangej+2*ceil(rangej/2))*gridy-(1+p)*gridy))
-    im.paste(bigim,(-gridx*ceil(rangei/2)-offsetx,-gridy*ceil(rangej/2)+offsety))
+    for m in range(rangei+2*extrai):
+        for p in range(rangej+2*extraj):
+            bigim.paste(griddata.get((i-extrai+m,j-extraj+p),zeroimg),(m*gridx,(rangej+2*extraj)*gridy-(1+p)*gridy))
+    im.paste(bigim,(-gridx*extrai-offsetx,-gridy*extraj+offsety-(gridy-griddif)))
     img.paste(im)
     
 def listener():
@@ -171,13 +171,16 @@ def listener():
     root.after(20,listener)
 
 gmpy2.get_context().precision=100 #komakohtade arv arbitrary precision puhul
-sizex=1200
-sizey=600
+sizex=300
+sizey=300
 n=1300
-gridx=300 #ühe arvutatava ruudu pikkus pikslites
-gridy=150
+gridx=250 #ühe arvutatava ruudu pikkus pikslites
+gridy=250
 rangei=ceil(sizex/gridx)
 rangej=ceil(sizey/gridy)
+extrai=ceil(rangei/2)
+extraj=ceil(rangej/2)
+griddif=sizey%gridy
 
 if __name__=='__main__':
     #minx = mpfr('-2')
