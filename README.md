@@ -10,3 +10,6 @@ Nüüd saab fraktalit ringi tõsta, välja zuumida. Lisaks kasutab programm nelj
 
 V3
 Kasutab gmpy2, mille abil saab teha arvutusi kui tahes täpselt (kuni mitu tuhat komakohta kindlasti), võrreldes tavalise doublega, mis on alla 20 komakoha. Kuna kompileerija gmpy2-te ei tunne, siis kompileerimine ei anna kiirust juurde ja on hoopis ilma kiirem. Gmpy2 on ise ka aeglasem, kui tavaliste floatidega arvutamine, seega on kokkuvõttes see mitusada korda aeglasem ja erilist interaktiivsust ei ole nagu kompileeritud versioonis ja mõistliku aja jooksul pildi saamiseks tuleb pikslite arvu vähendada (size). Seda versiooni saab muuta tavaliseks (sama kiire kui V2), kui võtta jit eest # ära ja algsuurused defineerida tavaliste arvudena, mitte gmpy2 kaudu.
+
+V4
+Nüüd saab panna ekraani suuruseks ükskõik mida. Lisaks saab määrata ristkülikute suurust, mille kaupa programm arvutab. Ringi tõstes hakkab ta kohe arvutama ainult neid piirkondi, mis on veel arvutamata.
